@@ -9,8 +9,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;
 
 app.get('/emailCheck/:input', function (req, res) {
-    console.log(req.body.input);
-    res.status(200).send(logic.isWordPyramid(req.params.input));
+    res.status(200).send(logic.isWordPyramid(req.params.input, req.body.input));
 });
 
 // Launch app to listen to specified port
