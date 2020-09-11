@@ -1,36 +1,33 @@
 
-const isWordPyramid = function(input_str, emails)
+const emailChecker = function(body)
 {
-    gmailMatchFilter(emails);
-    var charDict = {};
-    flag = true
-    input_str = input_str.replace( /\s/g, '');
-
-    for (var i = 0; i<input_str.length; i++){
-        if (input_str.charAt(i) in charDict){
-            charDict[input_str.charAt(i)] += 1
-        }
-        else{
-            charDict[input_str.charAt(i)] = 1
+    if (Object.keys(body).length === 0) {
+        throw 'Empty request body';
+    }
+    if (!body.hasOwnProperty('input')) {
+        throw 'No input property';
+    }
+    let emails = body.input;
+    if (emails.length === 0) {
+        return {
+            result: 0,
+            message: 'No Email Address provided in input'
         }
     }
-    var counts = Object.values(charDict).sort()
-    for (var j = 1; j <= counts.length; j++){
-        if (j!== counts[j-1]){
-            flag = false;
-            break;
-        }
-    }
-    var isPW = flag ? ' is a Pyramid word' : ' is not a Pyramid Word';
+    let result = getUniqueEmailCount(emails);
+    let flag = result !== -1
     return {
-        status : flag,
-        message: input_str + isPW
+        result: result,
+        message: flag ? 'Unique Email address' : 'Contains an invalid email address'
     }
 };
 
-function gmailMatchFilter(emails) {
+function getUniqueEmailCount(emails) {
     let uniqueEmail = new Set();
-    emails.forEach(email => {
+    let invalidFlag = false;
+
+    for (let i = 0; i < emails.length; i++) {
+        let email = emails[i];
         // Validate if its a true email address or not.
         const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         if (re.test(email)) {
@@ -41,10 +38,15 @@ function gmailMatchFilter(emails) {
             var finalName =  filteredName.includes('+') ? filteredName.substring(0, filteredName.indexOf('+')) : filteredName;
             uniqueEmail.add(finalName + '@' + domain);
         }
-    });
-    console.log(uniqueEmail);
+        else{
+            // console.log('Not a Valid email: ' + email);
+            invalidFlag = true;
+            break;
+        }
+    }
+    return invalidFlag ? -1 : uniqueEmail.size;
 }
 
 module.exports = {
-    isWordPyramid
+    emailChecker
 }

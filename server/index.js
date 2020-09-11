@@ -8,11 +8,19 @@ app.use(bodyParser.json());
 // Setup server port
 var port = process.env.PORT || 8080;
 
-app.get('/emailCheck/:input', function (req, res) {
-    res.status(200).send(logic.isWordPyramid(req.params.input, req.body.input));
+app.get('/email-check', function (req, res) {
+    try{
+        let response = logic.emailChecker(req.body);
+        if (response.result === -1) {
+            res.status(400);
+        }
+        res.send(response);
+    } catch (e) {
+        res.status(400).send(e);
+    }
 });
 
 // Launch app to listen to specified port
 app.listen(port, function () {
-     console.log("Running Fetch Reward Exercise on port http://localhost:" + port);
+     console.log("Running Fetch Rewards Coding Assessment on http://localhost:" + port);
 });
