@@ -25,17 +25,22 @@ GET http://localhost:8080/email-check
 ```
 
 Email Check API Request Structure: (body)
+```bash
 {
     "input": [email-id1,email-id2,email-id3]					// string array of email address 
 }
+```
 
 Email Check API Response Structure:
+```bash
 {
     "result": integer                                       // number of unique email addresses after filtering,
     "message": string                                       // a string message
 }
+```
 
 eg: http://localhost:8080/email-check
+```bash
     Request body: 
     {
         "input": ["test.email@gmail.com", "test.email+spam@gmail.com","testemail@gmail.com", "hda+233.3232@yahoo.co.in"]
@@ -45,5 +50,6 @@ eg: http://localhost:8080/email-check
         "result": 2,
         "message": "Unique Email address"
     }
+```
 
 If input contains any invalid email address, then result will be -1 with an appropriate error message. 
